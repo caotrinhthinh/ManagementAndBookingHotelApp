@@ -3,6 +3,7 @@ package com.example.ManagementAndBookingHotelApp.Utils;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 @Service
@@ -31,5 +33,21 @@ public class JWTUtils {
                 .signWith(Key)
                 .compact();
     }
+
+    public String extractUsername(String token) {
+        return extracClaims(token, Claims::getSubject);
+    }
     
+    private <T> T extracClaims(String token, Function<Claims, T> claimsFunction) {
+        return claimsFunction.apply(Jwts.parserBuilder().setSigningKey(Key).build().parseClaimsJws(token).getBody());
+    }
+
+    public boolean isExpired(String token) {
+        return extracClaims(token, Claims::getExpiration).before(new Date());
+    }
+
+    public boolean isValidToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isExpired(token)); 
+    }
 }
