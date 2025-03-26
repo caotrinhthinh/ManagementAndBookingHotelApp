@@ -21,7 +21,7 @@ public class Room {
 
     private String roomType;
     private BigDecimal roomPrice;
-    private String roomPhotoUrl;
+    private String roomImageUrl;
     private String roomDescription;
 
     @OneToMany(mappedBy = "room",
@@ -36,7 +36,7 @@ public class Room {
                 "id=" + id +
                 ", roomType='" + roomType + '\'' +
                 ", roomPrice=" + roomPrice +
-                ", roomPhotoUrl='" + roomPhotoUrl + '\'' +
+                ", roomPhotoUrl='" + roomImageUrl + '\'' +
                 ", roomDescription='" + roomDescription + '\'' +
                 '}';
     }
