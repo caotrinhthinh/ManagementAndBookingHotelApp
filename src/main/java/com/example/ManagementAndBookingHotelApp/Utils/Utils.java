@@ -1,6 +1,7 @@
 package com.example.ManagementAndBookingHotelApp.Utils;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.ManagementAndBookingHotelApp.DTO.BookingDTO;
@@ -96,9 +97,44 @@ public class Utils {
         if(booking.getRoom() != null) {
             RoomDTO roomDTO = new RoomDTO();
             roomDTO.setId(booking.getRoom().getId());
+            roomDTO.setRoomType(booking.getRoom().getRoomType());
+            roomDTO.setRoomPrice(booking.getRoom().getRoomPrice());
+            roomDTO.setRoomImageUrl(booking.getRoom().getRoomImageUrl());
+            roomDTO.setRoomDescription(booking.getRoom().getRoomDescription());
             bookingDTO.setRoom(roomDTO);
         }
-
         return bookingDTO;
+    }
+
+    public static UserDTO mapUserEntityToUserDTOPlusUserBookingsAndRoom(User user) {
+        UserDTO userDTO = new UserDTO();
+
+        if(!user.getBookings().isEmpty()) {
+            userDTO.setBookings(user.getBookings()
+                                .stream()
+                                .map(booking ->  mapBookingEntityToBookingDTOPlusBookedRooms(booking, false))
+                                .collect(Collectors.toList())
+            );
+        }
+
+        return userDTO;
+    }
+
+    public static List<UserDTO> mapUserListEntityToUserListDTO(List<User> userList) {
+        return userList.stream()
+                        .map(Utils::mapUserEntityToUserDTO)
+                        .collect(Collectors.toList());
+    }
+
+    public static List<RoomDTO> mapRoomListEntityToRoomListDTO(List<Room> roomList) {
+        return roomList.stream()
+                        .map(Utils::mapRoomEntityToRoomDTO)
+                        .collect(Collectors.toList());
+    }
+
+    public static List<BookingDTO> mapBookingListEntityToBookingListDTO(List<Booking> bookinglist) {
+        return bookinglist.stream()
+                          .map(Utils::mapBookingEntityToBookingDTO)
+                          .collect(Collectors.toList());
     }
 }
