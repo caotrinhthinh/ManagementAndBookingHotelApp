@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.example.ManagementAndBookingHotelApp.DTO.LoginRequest;
 import com.example.ManagementAndBookingHotelApp.DTO.Response;
@@ -17,6 +18,7 @@ import com.example.ManagementAndBookingHotelApp.Service.Interface.IUserService;
 import com.example.ManagementAndBookingHotelApp.Utils.JWTUtils;
 import com.example.ManagementAndBookingHotelApp.Utils.Utils;
 
+@Service
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
@@ -34,7 +36,7 @@ public class UserService implements IUserService {
             if(user.getRole() == null || user.getRole().isBlank()) {
                 user.setRole("USER");
             } 
-            if(userRepository.exsitsByEmail(user.getEmail())) {
+            if(userRepository.existsByEmail(user.getEmail())) {
                 throw new OurException(user.getEmail() + "Already Exists");
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));

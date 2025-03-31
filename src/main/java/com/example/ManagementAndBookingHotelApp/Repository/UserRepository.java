@@ -9,5 +9,7 @@ import com.example.ManagementAndBookingHotelApp.Model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String username);
+
+    boolean existsByEmail(String email);
     
 }
